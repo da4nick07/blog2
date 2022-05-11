@@ -7,6 +7,21 @@ use Exceptions\InvalidArgumentException;
 class User extends ActiveRecordEntity
 {
     protected static string $tableName = 'users';
+    public static array $updateAr = array( 'nickname'=>'',
+        'email'=>'',
+        'password_hash'=>'',
+        'auth_token'=>'');
+
+    public static array $insertAr = array( 'nickname'=>'',
+        'email'=>'',
+        'is_confirmed'=>'',
+        'role'=>'',
+        'password_hash'=>'',
+        'auth_token'=>'');
+//                     'created_at'=>'');
+
+    public static array $refreshAr = array( 'auth_token'=>'',
+        'created_at'=>'');
 
     protected string $nickname;
     protected string $email;
@@ -15,25 +30,11 @@ class User extends ActiveRecordEntity
     protected string $password_hash;
     protected string $auth_token;
     protected string $created_at;
-
-    public function __construct()
-    {
-        $this->updateAr =array( 'nickname'=>'',
-            'email'=>'',
-            'password_hash'=>'',
-            'auth_token'=>'');
-
-        $this->insertAr =array( 'nickname'=>'',
-            'email'=>'',
-            'is_confirmed'=>'',
-            'role'=>'',
-            'password_hash'=>'',
-            'auth_token'=>'');
-//                     'created_at'=>'');
-
-        $this->refreshAr =array( 'auth_token'=>'',
-            'created_at'=>'');
-    }
+    /*
+        public function __construct()
+        {
+        }
+    */
     /**
      * @return string
      */
@@ -84,10 +85,11 @@ class User extends ActiveRecordEntity
         $user->role = 'user';
         $user->auth_token = sha1(random_bytes(100)) . sha1(random_bytes(100));
 
-        foreach ($user->insertAr as $property => $v) {
-            $user->insertAr[$property] = $user->$property;
+        $ar = [];
+        foreach (static::$insertAr as $property => $v) {
+            $ar[$property] = $user->$property;
         }
-        $user->id = User::insert( $user->insertAr );
+        $user->id = User::insert( $ar );
 
         return $user;
     }

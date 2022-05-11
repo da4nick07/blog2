@@ -2,7 +2,6 @@
 namespace Services;
 
 use PDO;
-use PDOException;
 use Exceptions\DbException;
 
 class Db
@@ -27,9 +26,9 @@ class Db
             // prevent emulation of prepared statements
             $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->pdo->exec('SET NAMES UTF8');
-            $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); // раз
-            $this->pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false); // два, для возврата не строк, а int и varchar
-        } catch (PDOException $e) {
+            $this->pdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false); // раз
+            $this->pdo->setAttribute(\PDO::ATTR_STRINGIFY_FETCHES, false); // два, для возврата не строк, а int и varchar
+        } catch (\PDOException $e) {
             throw new DbException('Ошибка при подключении к базе данных: ' . $e->getMessage());
         }
     }
@@ -41,6 +40,14 @@ class Db
         }
 
         return self::$instance;
+    }
+
+    /**
+     * @return PDO
+     */
+    public function getPdo(): PDO
+    {
+        return $this->pdo;
     }
 
     /**
@@ -80,7 +87,8 @@ class Db
             return null;
         }
 
-        return $sth->fetchAll();
+        // настойчиво рекумендуют ВСЕГДА указывать режим выборки
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -100,4 +108,5 @@ class Db
     {
         return (int) $this->pdo->lastInsertId();
     }
+
 }

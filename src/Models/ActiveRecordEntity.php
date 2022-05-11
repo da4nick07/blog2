@@ -2,6 +2,7 @@
 namespace Models;
 
 use Services\Db;
+use PDO;
 
 abstract class ActiveRecordEntity
 {
@@ -9,9 +10,9 @@ abstract class ActiveRecordEntity
 //    protected static string $tableName = 'articles';
     protected ?int $id;
 
-    public array  $insertAr = [];
-    public array  $updateAr = [];
-    protected array  $refreshAr = [];
+    public static array  $insertAr = [];
+    public static array  $updateAr = [];
+    protected static array  $refreshAr = [];
 
     /**
      * @return int
@@ -47,11 +48,13 @@ abstract class ActiveRecordEntity
         $columns2params = [];
         $params2values = [];
         $index = 1;
-        foreach ($properties as $column => $value) {
-            $param = ':param' . $index; // :param1
-            $columns2params[] = $column . ' = ' . $param; // column1 = :param1
-            $params2values[$param] = $value; // [:param1 => value1]
-            $index++;
+        foreach (static::$updateAr as $column => $v) {
+            if ( isset( $properties[ $column ] )) {
+                $param = ':param' . $index; // :param1
+                $columns2params[] = $column . ' = ' . $param; // column1 = :param1
+                $params2values[ $param ] = $properties[ $column ]; // [:param1 => value1]
+                $index++;
+            }
         }
         $sql = 'UPDATE ' . static::$tableName . ' SET ' . implode(', ', $columns2params) . ' WHERE id = ' . $id;
         $db = Db::getInstance();
@@ -65,10 +68,12 @@ abstract class ActiveRecordEntity
         $params = [];
         $params2values = [];
         $index = 1;
-        foreach ($properties as $column => $value) {
-            $params[] = ':param' . $index; // :params
-            $params2values[':param' . $index] = $value; // [:param => value]
-            $index++;
+        foreach (static::$insertAr as $column => $v) {
+            if ( isset( $properties[ $column ] )) {
+                $params[] = ':param' . $index; // :params
+                $params2values[':param' . $index] = $properties[ $column ]; // [:param => value]
+                $index++;
+            }
         }
         $sql = 'INSERT INTO ' . static::$tableName . '(' . implode(', ', array_keys( $properties )) . ') VALUES (' . implode(', ', $params) . ')';
         $db = Db::getInstance();
@@ -80,9 +85,7 @@ abstract class ActiveRecordEntity
     public function refresh(): void
     {
         $objFromDb = static::selectOneByColumn( 'id', $this->id);
-//        $properties = get_object_vars($objFromDb);
-        foreach ($this->refreshAr as $key=>$value) {
-//            $this->$key = $value;
+        foreach (static::$refreshAr as $key=>$value) {
             $this->$key = $objFromDb->$key;
         }
     }
@@ -90,9 +93,11 @@ abstract class ActiveRecordEntity
     public function delete(): void
     {
         $db = Db::getInstance();
-        // зачем тут указание класса ?!
-        // а где $sth->bindParam(':id', $calories, PDO::PARAM_INT);
-        $db->execQuery('DELETE FROM `' . static::$tableName . '` WHERE id = :id', [':id' => $this->id] );
+
+//        $db->execQuery('DELETE FROM `' . static::$tableName . '` WHERE id = :id', [':id' => $this->id] );
+        $sth = $db->getPdo()->prepare('DELETE FROM `' . static::$tableName . '` WHERE id = :id');
+        $sth->bindParam( ':id', $this->id, PDO::PARAM_INT );
+        $sth->execute();
         $this->id = null;
     }
 }

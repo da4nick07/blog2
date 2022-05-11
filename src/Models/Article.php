@@ -15,6 +15,17 @@ class Article extends ActiveRecordEntity
     protected static int $count = 0;
     protected static string $tableName = 'articles';
 
+    public static array $updateAr = array( 'name'=>'',
+        'text'=>'');
+
+    public static array $insertAr = array( 'author_id'=>'',
+        'name'=>'',
+        'text'=>'');
+    //                               'created_at'=>'');
+
+    public static array $refreshAr = array( '$created_at'=>'');
+
+
     protected int $author_id;
     protected User $author;
     protected string $name;
@@ -25,15 +36,6 @@ class Article extends ActiveRecordEntity
     {
         self::$count++;
 
-        $this->updateAr =array( 'name'=>'',
-            'text'=>'');
-
-        $this->insertAr =array( 'author_id'=>'',
-            'name'=>'',
-            'text'=>'');
-        //                               'created_at'=>'');
-
-        $this->refreshAr =array( '$created_at'=>'');
     }
 
     public function getCount() : int
@@ -103,10 +105,12 @@ class Article extends ActiveRecordEntity
     public static function insertFromArray(array $fields, User $author): Article
     {
         $article = Article::createFromArray( $fields, $author );
-        foreach ($article->insertAr as $property => $v) {
-            $article->insertAr[$property] = $article->$property;
+
+        $ar = [];
+        foreach (static::$insertAr as $property => $v) {
+            $ar[$property] = $article->$property;
         }
-        $article->id =  Article::insert( $article->insertAr );
+        $article->id =  Article::insert( $ar );
 
         return $article;
     }
@@ -130,9 +134,11 @@ class Article extends ActiveRecordEntity
     public function updateFromArray(array $fields): bool
     {
         $this->changeFromArray( $fields );
-        foreach ($this->updateAr as $property => $v) {
-            $this->updateAr[$property] = $this->$property;
+        $ar = [];
+        foreach (static::$updateAr as $property => $v) {
+            $ar[$property] = $this->$property;
         }
-        return Article::update( $this->getId(), $this->updateAr );
+
+        return Article::update( $this->getId(), $ar );
     }
 }
