@@ -43,61 +43,76 @@ abstract class ActiveRecordEntity
         return $result[0];
     }
 
+    public function refresh(): bool
+    {
+        $objFromDb = static::selectOneByColumn( 'id', $this->id);
+        if ( $objFromDb !== null ) {
+            foreach (static::$refreshAr as $key=>$value) {
+                $this->$key = $objFromDb->$key;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public static function update( int $id, array $properties): bool
     {
+
         $columns2params = [];
         $params2values = [];
-        $index = 1;
-        foreach (static::$updateAr as $column => $v) {
-            if ( isset( $properties[ $column ] )) {
-                $param = ':param' . $index; // :param1
-                $columns2params[] = $column . ' = ' . $param; // column1 = :param1
-                $params2values[ $param ] = $properties[ $column ]; // [:param1 => value1]
-                $index++;
+        foreach (static::$updateAr as $property => $v) {
+            if ( isset( $properties[ $property ] )) {
+                $columns2params[] = $property . ' = :' . $property; // param1 = :param1
+                $params2values[$property] = $properties[$property];
             }
         }
-        $sql = 'UPDATE ' . static::$tableName . ' SET ' . implode(', ', $columns2params) . ' WHERE id = ' . $id;
-        $db = Db::getInstance();
 
-        return $db->execQuery($sql, $params2values);
-        // нужна обработка ошибки БД
+        $db = Db::getInstance();
+        $sth = $db->getPdo()->prepare('UPDATE ' . static::$tableName . ' SET ' . implode(', ', $columns2params) . ' WHERE id = ' . $id);
+//        return $sth->execute($params2values);
+
+        foreach ($params2values as $property => $v) {
+            $sth->bindValue( $property, $v, static::$updateAr[$property] );
+        }
+        return $sth->execute();
+
     }
 
     public static function insert(array $properties): int
     {
+
         $params = [];
         $params2values = [];
-        $index = 1;
-        foreach (static::$insertAr as $column => $v) {
-            if ( isset( $properties[ $column ] )) {
-                $params[] = ':param' . $index; // :params
-                $params2values[':param' . $index] = $properties[ $column ]; // [:param => value]
-                $index++;
-            }
+        foreach (static::$insertAr as $property => $v) {
+            $params[] = ':' . $property; // param1 = :param1
+            $params2values[$property] = $properties[$property];
         }
-        $sql = 'INSERT INTO ' . static::$tableName . '(' . implode(', ', array_keys( $properties )) . ') VALUES (' . implode(', ', $params) . ')';
+
         $db = Db::getInstance();
-        $db->execQuery($sql, $params2values);
+        $sth = $db->getPdo()->prepare('INSERT INTO ' . static::$tableName . '(' . implode(', ', array_keys( $params2values )) . ') VALUES (' . implode(', ', $params) . ')');
+//        $sth->execute($params2values);
+
+        foreach ($params2values as $property => $v) {
+            $sth->bindValue( $property, $v, static::$insertAr[$property] );
+        }
+        if ( !$sth->execute() ) {
+            return 0;
+        }
 
         return $db->getLastInsertId();
     }
 
-    public function refresh(): void
-    {
-        $objFromDb = static::selectOneByColumn( 'id', $this->id);
-        foreach (static::$refreshAr as $key=>$value) {
-            $this->$key = $objFromDb->$key;
-        }
-    }
-
-    public function delete(): void
+    public function delete(): bool
     {
         $db = Db::getInstance();
 
 //        $db->execQuery('DELETE FROM `' . static::$tableName . '` WHERE id = :id', [':id' => $this->id] );
         $sth = $db->getPdo()->prepare('DELETE FROM `' . static::$tableName . '` WHERE id = :id');
         $sth->bindParam( ':id', $this->id, PDO::PARAM_INT );
-        $sth->execute();
-        $this->id = null;
+        if ( $sth->execute() ) {
+            $this->id = null;
+            return true;
+        }
+        return false;
     }
 }

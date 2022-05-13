@@ -9,18 +9,19 @@ namespace Models;
 //require_once  'User.php';
 
 use Exceptions\InvalidArgumentException;
+use PDO;
 
 class Article extends ActiveRecordEntity
 {
     protected static int $count = 0;
     protected static string $tableName = 'articles';
 
-    public static array $updateAr = array( 'name'=>'',
-        'text'=>'');
+    public static array $updateAr = array( 'name'=>PDO::PARAM_STR,
+        'text'=>PDO::PARAM_STR);
 
-    public static array $insertAr = array( 'author_id'=>'',
-        'name'=>'',
-        'text'=>'');
+    public static array $insertAr = array( 'author_id'=>PDO::PARAM_INT,
+        'name'=>PDO::PARAM_STR,
+        'text'=>PDO::PARAM_STR);
     //                               'created_at'=>'');
 
     public static array $refreshAr = array( '$created_at'=>'');
@@ -105,17 +106,17 @@ class Article extends ActiveRecordEntity
     public static function insertFromArray(array $fields, User $author): Article
     {
         $article = Article::createFromArray( $fields, $author );
-
         $ar = [];
         foreach (static::$insertAr as $property => $v) {
             $ar[$property] = $article->$property;
         }
+
         $article->id =  Article::insert( $ar );
 
         return $article;
     }
 
-    public function changeFromArray(array $fields): Article
+    public function changeFromArray(array &$fields): Article
     {
         if (empty($fields['name'])) {
             throw new InvalidArgumentException('Не передано название статьи');
@@ -134,11 +135,7 @@ class Article extends ActiveRecordEntity
     public function updateFromArray(array $fields): bool
     {
         $this->changeFromArray( $fields );
-        $ar = [];
-        foreach (static::$updateAr as $property => $v) {
-            $ar[$property] = $this->$property;
-        }
 
-        return Article::update( $this->getId(), $ar );
+        return Article::update( $this->getId(), $fields );
     }
 }

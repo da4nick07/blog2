@@ -3,25 +3,26 @@
 namespace Models;
 
 use Exceptions\InvalidArgumentException;
+use PDO;
 
 class User extends ActiveRecordEntity
 {
     protected static string $tableName = 'users';
-    public static array $updateAr = array( 'nickname'=>'',
-        'email'=>'',
-        'password_hash'=>'',
-        'auth_token'=>'');
+    public static array $updateAr = array( 'nickname'=>PDO::PARAM_STR,
+        'email'=>PDO::PARAM_STR,
+        'password_hash'=>PDO::PARAM_STR,
+        'auth_token'=>PDO::PARAM_STR);
 
-    public static array $insertAr = array( 'nickname'=>'',
-        'email'=>'',
-        'is_confirmed'=>'',
-        'role'=>'',
-        'password_hash'=>'',
-        'auth_token'=>'');
+    public static array $insertAr = array( 'nickname'=>PDO::PARAM_STR,
+        'email'=>PDO::PARAM_STR,
+        'is_confirmed'=>PDO::PARAM_BOOL,
+        'role'=>PDO::PARAM_STR,
+        'password_hash'=>PDO::PARAM_STR,
+        'auth_token'=>PDO::PARAM_STR);
 //                     'created_at'=>'');
 
-    public static array $refreshAr = array( 'auth_token'=>'',
-        'created_at'=>'');
+    public static array $refreshAr = array( 'auth_token'=>PDO::PARAM_STR,
+        'created_at'=>PDO::PARAM_STR);
 
     protected string $nickname;
     protected string $email;
