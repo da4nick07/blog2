@@ -2,6 +2,8 @@
 
 namespace Controllers;
 
+require_once ROOT_DIR . 'lib/templates.php';
+
 use Models\Article;
 
 class MainController extends BaseController
@@ -12,21 +14,22 @@ class MainController extends BaseController
         /*
         * Вопрос: зачем для создания списка / перечня статей для КАЖДОЙ статьи создавать экземпляр класса? Мы так ресурсы бережём?!
         */
-        $articles = Article::selectClassAll();
-//        $articles = $this->db->query(
-//            'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a JOIN `users` u ON a.author_id = u.id', Article::class);
-//        <h2><a href="/articles/' . $article->getId() . '">' . $article->getName() . '(' . $article->getCount() . ')' .  '</a></h2>
+//        $articles = Article::selectClassAll();
+        $articles = $this->db->fetchQuery(
+            'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a JOIN `users` u ON a.author_id = u.id');
 
         $vars['_USER_'] = $params[ USER ];
         $vars['_MAIN_ARTICLES_'] = '';
+        $articleTpl = oneArticle();
         foreach ( $articles as $article) {
-            $vars['_MAIN_ARTICLES_'] .= '
-        <h2><a href="/articles/' . $article->getId() . '">' . $article->getName() .  '</a>' . '(count = ' . $article->getCount() . ')' . '</h2>
-                <p>' . $article->getText() .  '</p>
-                <hr>
-            ';
+            /*
+                        $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
+                            array( $article->getId(), $article->getName(), $article->getText(), 'xxx' ), $articleTpl);
+            */
+            $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
+                array( $article['a_id'], $article['name'], $article['text'], $article['nickname'] ), $articleTpl);
+
         }
-//                <p>Автор: <i>' . $article['nickname'] .  '</i></p>
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
