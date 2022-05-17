@@ -1,4 +1,8 @@
 <?php
+/*
+ *  общий init
+ */
+
 
 // грузим основные константы
 require_once 'const.php';
@@ -15,6 +19,3 @@ function blogClassLoader(string $className)
 }
 
 spl_autoload_register('blogClassLoader');
-
-// базовые функции
-require_once ROOT_DIR . 'lib/functions.php';

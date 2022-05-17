@@ -19,7 +19,7 @@ if ( $serverUri['path'] ==='/' ) {
 }
 
 // начальные установки + загрузчик классов
-require_once '../boot/init.php';
+require_once '../boot/init_html.php';
 use Exceptions\DbException;
 use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;

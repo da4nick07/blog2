@@ -115,4 +115,9 @@ abstract class ActiveRecordEntity
         }
         return false;
     }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }
