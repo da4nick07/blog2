@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title><?=$_MAIN_TITLE_ ?? 'Другой блог'?></title>
+    <link rel="stylesheet" type="text/css" href="/static/front/styles.css"/>
 </head>
 <body>
 
@@ -10,9 +16,9 @@
     <tr>
         <td colspan="2" style="text-align: right">
             <?php if(!empty($_USER_)): ?>
-                Привет, <?= $_USER_->getNickname() ?>  | <a href="http://blog/users/logOut">Выйти</a>
+                Привет, <?= $_USER_->getNickname() ?>  | <a href="http://blog2/users/logOut">Выйти</a>
             <?php else: ?>
-                <a href="http://blog/users/login">Войти</a> | <a href="http://blog/users/register">Зарегестрироваться</a>
+                <a href="http://blog2/users/login">Войти</a> | <a href="http://blog2/users/register">Зарегестрироваться</a>
             <?php endif; ?>
         </td>
     </tr>
@@ -26,6 +32,7 @@
             <ul>
                 <li><a href="/">Главная страница</a></li>
                 <li><a href="/about-me">Обо мне</a></li>
+                <li><a href="/test">TEST</a></li>
             </ul>
         </td>
     </tr>
