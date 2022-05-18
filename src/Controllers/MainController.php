@@ -37,7 +37,7 @@ class MainController extends BaseController
     {
         $vars['_MAIN_TITLE_']  = 'Приветствие';
         $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = 'Привет, ' . $params[ URI ][1]??'';
+        $vars['_MAIN_ARTICLES_'] = 'Привет, ' . $params[ MATCHES ][1]??'';
 
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
@@ -46,9 +46,23 @@ class MainController extends BaseController
     {
         $vars['_MAIN_TITLE_']  = 'Пока, пока...';
         $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = 'Пока... Пока..., ' . $params[ URI ][1]??'';
+        $vars['_MAIN_ARTICLES_'] = 'Пока... Пока..., ' . $params[ MATCHES ][1]??'';
 
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
-}
 
+    public function test(array $params = []) : void
+    {
+
+        $vars['subject'] = 'Subject';
+        $vars['name'] = 'Name';
+        $vars['adress'] = 'Adress';
+        //       echo renderVars( ROOT_DIR . 'templates/test/test.html', $vars);
+        if ( count($vars) ) {
+            extract($vars, EXTR_OVERWRITE);
+        }
+
+        include ROOT_DIR . 'templates/test/test.html';
+    }
+
+}

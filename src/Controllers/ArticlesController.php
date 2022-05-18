@@ -12,7 +12,7 @@ class ArticlesController extends BaseController
 
     public function view(array $params) : void
     {
-        $article = Article::selectOneByColumn( 'id', (int)$params[ URI ][1] );
+        $article = Article::selectOneByColumn( 'id', (int)$params[ MATCHES ][1] );
 
         if ( $article === null) {
             throw new NotFoundException();
@@ -30,7 +30,7 @@ class ArticlesController extends BaseController
         }
 
         /** @var  $article Article */
-        $article = Article::selectOneByColumn( 'id', (int)$params[ URI ][1]);
+        $article = Article::selectOneByColumn( 'id', (int)$params[ MATCHES ][1]);
 
         if ($article === null) {
             throw new NotFoundException();
@@ -91,7 +91,7 @@ class ArticlesController extends BaseController
 
     public function delete(array $params): void
     {
-        $article = Article::selectOneByColumn( 'id', (int)$params[ URI ][1] );
+        $article = Article::selectOneByColumn( 'id', (int)$params[ MATCHES ][0] );
 
         if ($article === null) {
             http_response_code(404);

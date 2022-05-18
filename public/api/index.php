@@ -1,22 +1,20 @@
 <?php
 
-require '../../lib/checkUri.php';
+require '../../lib/checkUrl.php';
 require_once '../../boot/init_api.php';
 
-if ( is_bool( $serverUri = getServerUri())) {
-    displayJson(['error' => 'Запрошен некорректный uri'], 500);
+if ( is_bool( $route = getServerPath())) {
+    displayJson(['error' => 'Запрошен некорректный url'], 500);
     return;
 }
-
-$route  = $serverUri['path'];
 
 use Exceptions\DbException;
 use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;
 use Exceptions\Forbidden;
 
-
 try {
+    $params[ USER] = getUserByToken();
     // а через функцию не быстрее ?
     $routes = require SRC_DIR . 'routes_api.php';
 
@@ -32,18 +30,20 @@ try {
         throw new NotFoundException('Неверный url');
     }
 
-    unset($matches[0]);
+//    unset($matches[0]);
+    $params[ MATCHES] = $matches;
 
     $controllerName = $controllerAndAction[0];
     $actionName = $controllerAndAction[1];
 
     $controller = new $controllerName();
-    $controller->$actionName(...$matches);
-} catch (Exceptions\DbException $e) {
+    $controller->$actionName( $params );
+} catch (DbException $e) {
     displayJson(['error' => $e->getMessage()], 500);
-} catch (Exceptions\NotFoundException $e) {
-//    echo $e->getMessage();
+} catch (NotFoundException $e) {
     displayJson(['error' => $e->getMessage()], 404);
-} catch (Exceptions\UnauthorizedException $e) {
+} catch (UnauthorizedException $e) {
     displayJson(['error' => $e->getMessage()], 401);
+} catch (Forbidden $e) {
+    displayJson(['error' => $e->getMessage()], 403);
 }

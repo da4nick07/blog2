@@ -55,5 +55,4 @@ class UsersController
         setcookie('token', '', -1, '/', '', false, true);
         header('Location: /bye/' . $params[ USER ]->getNickname());
     }
-
 }

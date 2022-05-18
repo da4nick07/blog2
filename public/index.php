@@ -1,21 +1,11 @@
 <?php
 
-require '../lib/checkUri.php';
-if ( is_bool( $serverUri = getServerUri())) {
-    echo 'Запрошен некорректный uri';
-    return;
-}
+require '../lib/checkUrl.php';
 
-$route  = $serverUri['path'];
-if ( $serverUri['path'] ==='/' ) {
-    $uri[] = '';
-} else {
-    $uri = [];
-    $tok = strtok($serverUri['path'], "/");
-    while ($tok !== false) {
-        $uri[] = $tok;
-        $tok = strtok("/");
-    }
+$route = getServerPath();
+if ( is_bool( $route )) {
+    echo 'Запрошен некорректный url';
+    return;
 }
 
 // начальные установки + загрузчик классов
@@ -25,22 +15,12 @@ use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;
 use Exceptions\Forbidden;
 
-// а через функцию не быстрее ?
-$routes = require SRC_DIR . 'routes.php';
-/*
-if (isset($routes[$uri[0]])) {
-    $controller = new $routes[ $uri[0] ][0];
-    $action = $routes[ $uri[0] ][1];
-    $controller->$action( $uri );
-} else {
-    echo 'Запрошен неизвестный url = "' . $serverUri['path'] . '" <br>';
-}
-*/
-
-$params[ URI] = $uri;
-$params[ USER] = getUserByToken();
-
 try {
+    $params[ USER] = getUserByToken();
+
+    // а через функцию не быстрее ?
+    $routes = require SRC_DIR . 'routes.php';
+
     $isRouteFound = false;
     foreach ($routes as $pattern => $controllerAndAction) {
         preg_match($pattern, $route, $matches);
@@ -53,13 +33,13 @@ try {
     if (!$isRouteFound) {
         throw new NotFoundException();
     }
+//    unset($matches[0]);
+    $params[ MATCHES] = $matches;
 
     $controllerName = $controllerAndAction[0];
     $actionName = $controllerAndAction[1];
 
     $controller = new $controllerName();
-//  unset($matches[0]);
-//  $controller->$actionName(...$matches);
     $controller->$actionName( $params );
 } catch (DbException $e) {
     outException( $params, ROOT_DIR . 'templates/errors/500.php', $e->getMessage(), 500);

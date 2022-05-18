@@ -4,7 +4,10 @@
  *
  * @return bool|array
  */
-function getServerUri() : bool|array
+
+// не работает... ВСЕГДА возвращает bool
+//function getServerPath() : bool | array
+function getServerPath()
 {
     if ( !isset($_SERVER['REQUEST_URI'])) {
         return false;
@@ -15,5 +18,5 @@ function getServerUri() : bool|array
         return false;
     }
 
-    return $serverUri;
+    return $serverUri['path'];
 }
