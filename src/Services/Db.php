@@ -76,7 +76,6 @@ class Db
      * @return array|null
      *
      *  Функция должна возвращает массив ЗАПИСЕЙ, результат запроса
-     *  С настройками пока не определился...
      */
     public function fetchQuery(string $sql, array $params = []): ?array
     {

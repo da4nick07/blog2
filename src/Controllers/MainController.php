@@ -9,27 +9,33 @@ use Models\Article;
 class MainController extends BaseController
 {
 
-    public function main(array $params) : void
+    public function main( array $params )
+    {
+        $params[ MATCHES ] = array( '/1', '1');
+        $this->page($params);
+    }
+
+    public function page(array $params) : void
     {
         /*
         * Вопрос: зачем для создания списка / перечня статей для КАЖДОЙ статьи создавать экземпляр класса? Мы так ресурсы бережём?!
         */
 //        $articles = Article::selectClassAll();
+
+        $itemsPerPage =3;
         $articles = $this->db->fetchQuery(
-            'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a JOIN `users` u ON a.author_id = u.id');
+            'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a JOIN `users` u ON a.author_id = u.id
+                ORDER BY a_id LIMIT ' . $itemsPerPage . ' OFFSET ' . ( (int)$params[ MATCHES ][ 1 ] -1) *$itemsPerPage . ';');
 
         $vars['_USER_'] = $params[ USER ];
         $vars['_MAIN_ARTICLES_'] = '';
-        $articleTpl = oneArticle();
+        $articleTpl = articleInListTpl();
         foreach ( $articles as $article) {
-            /*
-                        $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
-                            array( $article->getId(), $article->getName(), $article->getText(), 'xxx' ), $articleTpl);
-            */
             $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
                 array( $article['a_id'], $article['name'], $article['text'], $article['nickname'] ), $articleTpl);
 
         }
+        $vars['_MAIN_ARTICLES_'] .= articlesPages( Article::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 

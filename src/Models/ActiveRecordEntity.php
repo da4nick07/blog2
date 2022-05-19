@@ -116,8 +116,15 @@ abstract class ActiveRecordEntity
         return false;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize() :array
     {
         return get_object_vars($this);
+    }
+
+    public static function getPagesCount(int $itemsPerPage): int
+    {
+        $db = Db::getInstance();
+        $result = $db->fetchQuery('SELECT COUNT(*) AS cnt FROM ' . static::$tableName . ';');
+        return ceil($result[0]['cnt'] / $itemsPerPage);
     }
 }
