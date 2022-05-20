@@ -32,7 +32,7 @@ class MainController extends BaseController
         $articleTpl = articleInListTpl();
         foreach ( $articles as $article) {
             $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
-                array( $article['a_id'], $article['name'], $article['text'], $article['nickname'] ), $articleTpl);
+                array( $article['a_id'], htmlentities( $article['name'] ), htmlentities( $article['text'] ), htmlentities( $article['nickname'] )), $articleTpl);
 
         }
         $vars['_MAIN_ARTICLES_'] .= articlesPages( Article::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
@@ -43,7 +43,7 @@ class MainController extends BaseController
     {
         $vars['_MAIN_TITLE_']  = 'Приветствие';
         $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = 'Привет, ' . $params[ MATCHES ][1]??'';
+        $vars['_MAIN_ARTICLES_'] = 'Привет, ' . htmlentities($params[ MATCHES ][1]??'');
 
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
@@ -52,7 +52,7 @@ class MainController extends BaseController
     {
         $vars['_MAIN_TITLE_']  = 'Пока, пока...';
         $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = 'Пока... Пока..., ' . $params[ MATCHES ][1]??'';
+        $vars['_MAIN_ARTICLES_'] = 'Пока... Пока..., ' . htmlentities($params[ MATCHES ][1]??'');
 
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
