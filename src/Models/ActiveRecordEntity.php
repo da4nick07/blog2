@@ -3,11 +3,11 @@ namespace Models;
 
 use Services\Db;
 use PDO;
+use Services\MRedis;
 
 abstract class ActiveRecordEntity
 {
 //  ВНИМАНИЕ! У наследников необходимо задать static string $tableName
-//    protected static string $tableName = 'articles';
     protected ?int $id;
 
     public static array  $insertAr = [];
@@ -116,15 +116,8 @@ abstract class ActiveRecordEntity
         return false;
     }
 
-    public function jsonSerialize() :array
+    public function jsonSerialize() : array
     {
         return get_object_vars($this);
-    }
-
-    public static function getPagesCount(int $itemsPerPage): int
-    {
-        $db = Db::getInstance();
-        $result = $db->fetchQuery('SELECT COUNT(*) AS cnt FROM ' . static::$tableName . ';');
-        return ceil($result[0]['cnt'] / $itemsPerPage);
     }
 }

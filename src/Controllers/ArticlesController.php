@@ -6,6 +6,8 @@ use Exceptions\UnauthorizedException;
 use Exceptions\InvalidArgumentException;
 use Exceptions\Forbidden;
 use Exceptions\NotFoundException;
+use Services\MRedis;
+use Services\Paging;
 
 class ArticlesController extends BaseController
 {
@@ -81,6 +83,12 @@ class ArticlesController extends BaseController
         }
 
         if ( $article !== null) {
+            // удалим всё закешированное
+            $redis = MRedis::getInstance();
+            $redis->getRedis()->del( $redis->getRedis()->keys('art*') );
+            // пересчитаем базовое для кэша
+            Paging::getArticlesId(0);
+
             header('Location: /articles/' . $article->getId());
         } else {
             $vars['_USER_'] = $params[ USER ];

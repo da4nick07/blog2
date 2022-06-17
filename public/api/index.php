@@ -9,6 +9,7 @@ if ( is_bool( $route = getServerPath())) {
 }
 
 use Exceptions\DbException;
+use Exceptions\MRedisExeption;
 use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;
 use Exceptions\Forbidden;
@@ -46,4 +47,6 @@ try {
     displayJson(['error' => $e->getMessage()], 401);
 } catch (Forbidden $e) {
     displayJson(['error' => $e->getMessage()], 403);
+} catch (MRedisExeption $e) {
+    outException( $params, ROOT_DIR . 'templates/errors/500.php', $e->getMessage(), 500);
 }

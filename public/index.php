@@ -1,4 +1,5 @@
 <?php
+$startTime = microtime(true);
 
 require '../lib/checkUrl.php';
 
@@ -11,6 +12,7 @@ if ( is_bool( $route )) {
 // начальные установки + загрузчик классов
 require_once '../boot/init_html.php';
 use Exceptions\DbException;
+use Exceptions\MRedisExeption;
 use Exceptions\NotFoundException;
 use Exceptions\UnauthorizedException;
 use Exceptions\Forbidden;
@@ -49,4 +51,10 @@ try {
     outException( $params, ROOT_DIR . 'templates/errors/401.php', $e->getMessage(), 401);
 } catch (Forbidden $e) {
     outException( $params, ROOT_DIR . 'templates/errors/403.php', $e->getMessage(), 403);
+} catch (MRedisExeption $e) {
+    outException( $params, ROOT_DIR . 'templates/errors/500.php', $e->getMessage(), 500);
 }
+
+$endTime = microtime(true);
+printf('<div style="text-align: center; padding: 5px">Время генерации страницы: %f</div>', $endTime - $startTime );
+

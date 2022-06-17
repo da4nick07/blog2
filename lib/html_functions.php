@@ -1,5 +1,7 @@
 <?php
 
+use Services\Paging;
+
 /**
  * Включает и выполняет указанный HTML-шаблон с PHP переменными
  *
@@ -36,4 +38,27 @@ function outException( array $params, string $template, string $errMsg, int $cod
     $vars['_MAIN_ARTICLES_'] = renderVars( $template, ['_ERROR_' => $errMsg]);
     $vars['_USER_'] = $params[ USER ];
     echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+}
+
+/**
+ * Формирует страницу в списке статей
+ *
+ * @param array $articles
+ * @param array $params
+ * @return string
+ */
+function getArticlrsPage( array $articles, array $params) : string
+{
+    $itemsPerPage =3;
+    $res = '';
+    $articleTpl = articleInListTpl();
+    foreach ( $articles as $article) {
+        $res .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
+            array( $article['a_id'], htmlentities( $article['name'] ), htmlentities( $article['text'] ), htmlentities( $article['nickname'] )), $articleTpl);
+
+    }
+//        $vars['_MAIN_ARTICLES_'] .= articlesPages( Article::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
+    $res .= lotArticlesPages( Paging::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
+
+    return $res;
 }

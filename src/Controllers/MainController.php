@@ -3,8 +3,7 @@
 namespace Controllers;
 
 require_once ROOT_DIR . 'lib/templates.php';
-
-use Models\Article;
+use Services\Paging;
 
 class MainController extends BaseController
 {
@@ -22,20 +21,9 @@ class MainController extends BaseController
         */
 //        $articles = Article::selectClassAll();
 
-        $itemsPerPage =3;
-        $articles = $this->db->fetchQuery(
-            'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a JOIN `users` u ON a.author_id = u.id
-                ORDER BY a_id LIMIT ' . $itemsPerPage . ' OFFSET ' . ( (int)$params[ MATCHES ][ 1 ] -1) *$itemsPerPage . ';');
-
-        $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = '';
-        $articleTpl = articleInListTpl();
-        foreach ( $articles as $article) {
-            $vars['_MAIN_ARTICLES_'] .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
-                array( $article['a_id'], htmlentities( $article['name'] ), htmlentities( $article['text'] ), htmlentities( $article['nickname'] )), $articleTpl);
-
-        }
-        $vars['_MAIN_ARTICLES_'] .= articlesPages( Article::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
+        $itemsPerPage =ARTICLES_PER_PAGE;
+        $articles = Paging::getArticlesOnPage( 0, $itemsPerPage, (int)$params[ MATCHES ][ 1 ]);
+        $vars['_MAIN_ARTICLES_'] = getArticlrsPage( $articles, $params);
         echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 

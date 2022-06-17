@@ -1,3 +1,4 @@
+php_value memory_limit 512M
 RewriteEngine On
 
 RewriteCond %{SCRIPT_FILENAME} !-d
