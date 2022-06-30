@@ -21,6 +21,7 @@ class MainController extends BaseController
         */
 //        $articles = Article::selectClassAll();
 
+        $vars['_USER_'] = $params[ USER ];
         $itemsPerPage =ARTICLES_PER_PAGE;
         $articles = Paging::getArticlesOnPage( 0, $itemsPerPage, (int)$params[ MATCHES ][ 1 ]);
         $vars['_MAIN_ARTICLES_'] = getArticlrsPage( $articles, $params);

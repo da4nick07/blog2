@@ -83,11 +83,7 @@ class ArticlesController extends BaseController
         }
 
         if ( $article !== null) {
-            // удалим всё закешированное
-            $redis = MRedis::getInstance();
-            $redis->getRedis()->del( $redis->getRedis()->keys('art*') );
-            // пересчитаем базовое для кэша
-            Paging::getArticlesId(0);
+            Paging::flushCache(true);
 
             header('Location: /articles/' . $article->getId());
         } else {
@@ -99,7 +95,7 @@ class ArticlesController extends BaseController
 
     public function delete(array $params): void
     {
-        $article = Article::selectOneByColumn( 'id', (int)$params[ MATCHES ][0] );
+        $article = Article::selectOneByColumn( 'id', (int)$params[ MATCHES ][1] );
 
         if ($article === null) {
             http_response_code(404);
@@ -107,5 +103,7 @@ class ArticlesController extends BaseController
             return;
         }
         $article->delete();
+        Paging::flushCache(false);
+        header('Location: /' );
     }
 }

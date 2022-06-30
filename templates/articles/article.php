@@ -4,5 +4,5 @@
 
 <?php if( $_ARTICLE_->isEditable( $_USER_ ) ): ?>
     <a href="/articles/<?= $_ARTICLE_->getId() ?>/edit">Редактировать статью</a>
+    &nbsp;&nbsp;<a href="/articles/<?= $_ARTICLE_->getId() ?>/delete">Удалить</a>
 <?php endif; ?>
-

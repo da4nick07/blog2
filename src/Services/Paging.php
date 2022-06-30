@@ -124,5 +124,14 @@ class Paging
 
         return $result;
     }
-}
 
+    public static function flushCache(bool $recalc = true): void
+    {
+        $redis = MRedis::getInstance();
+        $redis->getRedis()->del( $redis->getRedis()->keys('art*') );
+        if ($recalc) {
+            static::getArticlesId(0);
+        }
+    }
+
+}
