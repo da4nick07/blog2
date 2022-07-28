@@ -4,6 +4,6 @@
 <p> Дата публикации: <?= $_ARTICLE_->getCreatedAt() ?? "Неизвестна" ?></p>
 
 <?php if( $_ARTICLE_->isEditable( $_USER_ ) ): ?>
-    <a href="/articles/<?= $_ARTICLE_->getId() ?>/edit">Редактировать статью</a>
+    <a href="/articles/<?= $_ARTICLE_->getId() ?>/edit">Редактировать</a>
     &nbsp;&nbsp;<a href="/articles/<?= $_ARTICLE_->getId() ?>/delete">Удалить</a>
 <?php endif; ?>
