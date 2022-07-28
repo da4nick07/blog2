@@ -2,7 +2,6 @@
 namespace Services;
 
 use PDO;
-use Services\Db;
 
 class Paging
 {
@@ -95,7 +94,7 @@ class Paging
 //        $sql = 'SELECT a_id, a.name, a.text, nickname FROM ( SELECT  a.id as a_id, a.name, a.text, a.author_id  FROM `articles` a WHERE id IN (' . implode( ',', $art) . ')) a
 //                    INNER JOIN `users` u ON a.author_id = u.id  ORDER BY a_id ;';
         // на миллионе записей всё равно 0,001 сек.
-        $sql = 'SELECT  a.id as a_id, a.name, a.text, nickname  FROM `articles` a
+        $sql = 'SELECT  a.id as a_id, a.name, a.text, nickname, a.created_at  FROM `articles` a
                     INNER JOIN `users` u ON a.author_id = u.id WHERE a.id IN (' . implode( ',', $art) . ') ORDER BY a_id ;';
         $sth = $db->getPdo()->prepare($sql);
         $res = $sth->execute();
@@ -119,7 +118,7 @@ class Paging
 //        $db = Db::getInstance();
 //        $result = $db->fetchQuery('SELECT COUNT(*) AS cnt FROM ' . static::$tableName . ';');
 //        $result = ceil($result[0]['cnt'] / $itemsPerPage);
-        $result = ceil(count( static::getArticlesId(0)) / $itemsPerPage);
+        $result = ceil(count( static::getArticlesId()) / $itemsPerPage);
         $redis->getRedis()->set( $fname, $result);
 
         return $result;
@@ -130,8 +129,9 @@ class Paging
         $redis = MRedis::getInstance();
         $redis->getRedis()->del( $redis->getRedis()->keys('art*') );
         if ($recalc) {
-            static::getArticlesId(0);
+            static::getArticlesId();
         }
     }
 
 }
+

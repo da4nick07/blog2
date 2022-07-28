@@ -1,16 +1,17 @@
 <?php
 
 /**
- * возвращает HTML-шаблон с плейсхолдерами для статьи
+ * возвращает HTML-шаблон для статьи в списке, с переменными
  *
  * @return string
  */
 function articleInListTpl() : string
 {
     return '
-        <h2><a href="/articles/%ARTICLE_ID% "> %ARTICLE_NAME% </a></h2>
-        <p>%ARTICLE_TEXT%</p>
-        <p>Автор: <i>%NICK_NAME%</i></p>
+        <h2><a href="/articles/<?=$_ARTICLE_ID_?> "> <?=$_ARTICLE_NAME_ ?? "НЕТ НАЗВАНИЯ?"?> </a></h2>
+        <p><?=$_ARTICLE_TEXT_ ?? "НЕТ ТЕКСТА?"?></p>
+        <p>Автор: <i><?=$_NICK_NAME_ ?? "АВТОР НЕ УКАЗАН?"?></i></p>
+        <p>Дата публикации: <i><?=$_CREATED_AT_ ?? "Неизвестна"?></i></p>
         <hr>
         ';
 }

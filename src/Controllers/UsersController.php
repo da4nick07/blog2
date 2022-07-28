@@ -6,7 +6,7 @@ use Exceptions\InvalidArgumentException;
 
 class UsersController
 {
-    public function signUp()
+    public function register()
     {
         $vars['_MAIN_TITLE_']  = 'Регистрация';
         $user = null;
@@ -24,10 +24,10 @@ class UsersController
             $vars['_USER_'] = $user;
             $vars['_MAIN_ARTICLES_'] = include ROOT_DIR . 'templates/users/signUpSuccessful.php';
         } else {
-            $vars['_MAIN_ARTICLES_'] = renderVars(ROOT_DIR . 'templates/users/signUp.php', $vars2);
+            $vars['_MAIN_ARTICLES_'] = renderTpl(ROOT_DIR . 'templates/users/signUp.php', $vars2);
         }
 
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function login()
@@ -45,9 +45,9 @@ class UsersController
                 $vars2['_ERROR_'] = $e->getMessage();
             }
         }
-        $vars['_MAIN_ARTICLES_'] = renderVars(ROOT_DIR . 'templates/users/login.php', $vars2);
+        $vars['_MAIN_ARTICLES_'] = renderTpl(ROOT_DIR . 'templates/users/login.php', $vars2);
 
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function logOut( array $params = [] )

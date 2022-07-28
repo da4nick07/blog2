@@ -6,7 +6,6 @@ use Exceptions\UnauthorizedException;
 use Exceptions\InvalidArgumentException;
 use Exceptions\Forbidden;
 use Exceptions\NotFoundException;
-use Services\MRedis;
 use Services\Paging;
 
 class ArticlesController extends BaseController
@@ -21,8 +20,8 @@ class ArticlesController extends BaseController
         }
 
         $vars['_USER_'] = $params[ USER ];
-        $vars['_MAIN_ARTICLES_'] = renderVars(ROOT_DIR . 'templates/articles/article.php', ['_USER_' => $vars['_USER_'], '_ARTICLE_' => $article]);
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        $vars['_MAIN_ARTICLES_'] = renderTpl(ROOT_DIR . 'templates/articles/article.php', ['_USER_' => $vars['_USER_'], '_ARTICLE_' => $article]);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function edit(array $params): void
@@ -43,15 +42,15 @@ class ArticlesController extends BaseController
 
         if ( empty($_POST) ) {
             $vars['_USER_'] = $params[ USER ];
-            $vars['_MAIN_ARTICLES_'] = renderVars(ROOT_DIR . 'templates/articles/edit.php', ['_ARTICLE_' => $article]);
-            echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+            $vars['_MAIN_ARTICLES_'] = renderTpl(ROOT_DIR . 'templates/articles/edit.php', ['_ARTICLE_' => $article]);
+            echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
         } else {
             try {
                 $article->updateFromArray($_POST);
             } catch (InvalidArgumentException $e) {
                 $vars['_USER_'] = $params[ USER ];
-                $vars['_MAIN_ARTICLES_'] = renderVars(ROOT_DIR . 'templates/articles/edit.php', ['_ERROR_' => $e->getMessage(), '_ARTICLE_' => $article]);
-                echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+                $vars['_MAIN_ARTICLES_'] = renderTpl(ROOT_DIR . 'templates/articles/edit.php', ['_ERROR_' => $e->getMessage(), '_ARTICLE_' => $article]);
+                echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
                 return;
             }
 
@@ -83,13 +82,13 @@ class ArticlesController extends BaseController
         }
 
         if ( $article !== null) {
-            Paging::flushCache(true);
+            Paging::flushCache();
 
             header('Location: /articles/' . $article->getId());
         } else {
             $vars['_USER_'] = $params[ USER ];
-            $vars['_MAIN_ARTICLES_'] = renderVars( ROOT_DIR . 'templates/articles/add.php', $vars2);
-            echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+            $vars['_MAIN_ARTICLES_'] = renderTpl( ROOT_DIR . 'templates/articles/add.php', $vars2);
+            echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
         }
     }
 
@@ -99,7 +98,7 @@ class ArticlesController extends BaseController
 
         if ($article === null) {
             http_response_code(404);
-            echo renderVars( ROOT_DIR . 'templates/errors/404.php', []);
+            echo renderTpl( ROOT_DIR . 'templates/errors/404.php');
             return;
         }
         $article->delete();

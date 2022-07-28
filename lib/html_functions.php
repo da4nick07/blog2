@@ -3,24 +3,39 @@
 use Services\Paging;
 
 /**
- * Включает и выполняет указанный HTML-шаблон с PHP переменными
+ *  Тип шаблона:
+ *  - FILE - шаблон - файл, его загрузка через include
+ *  - STRING - шаблон - строка, его загрузка через eval
+ */
+enum TplType
+{
+    case FILE;
+    case STRING;
+}
+
+/**
+ * Выполняет указанный HTML-шаблон с PHP переменными
  *
- * @param string $templateName - полный путь до HTML-шаблона
+ * @param string $tpl - полный путь до HTML-шаблона или строка собс-но шаблона
  * @param array $vars - массив переменных
+ * @param TplType $tpltype - FILE - в $tpl - полный путь до HTML-шаблона, STRING - в $tpl - текст шаблона
  * @return string
  */
-function renderVars(string $templateName, array $vars = []) : string
+function renderTpl(string $tpl, array $vars = [], TplType $tplType = TplType::FILE) : string
 {
     if ( count($vars) ) {
         extract($vars, EXTR_OVERWRITE);
     }
 
     ob_start();
-    include $templateName;
+    if ($tplType === TplType::FILE) {
+        include $tpl;
+    } else {
+        eval( '?>' . $tpl . '<?php echo PHP_EOL;' );
+    }
 
     return ob_get_clean();
 }
-
 /**
  * Формирует и выводит страницу с сообщением об ошибке
  *
@@ -35,9 +50,9 @@ function outException( array $params, string $template, string $errMsg, int $cod
     if ( $code ) {
         http_response_code($code);
     }
-    $vars['_MAIN_ARTICLES_'] = renderVars( $template, ['_ERROR_' => $errMsg]);
+    $vars['_MAIN_ARTICLES_'] = renderTpl( $template, ['_ERROR_' => $errMsg]);
     $vars['_USER_'] = $params[ USER ];
-    echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+    echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
 }
 
 /**
@@ -53,9 +68,12 @@ function getArticlrsPage( array $articles, array $params) : string
     $res = '';
     $articleTpl = articleInListTpl();
     foreach ( $articles as $article) {
-        $res .= str_replace( array( '%ARTICLE_ID%', '%ARTICLE_NAME%', '%ARTICLE_TEXT%', '%NICK_NAME%'),
-            array( $article['a_id'], htmlentities( $article['name'] ), htmlentities( $article['text'] ), htmlentities( $article['nickname'] )), $articleTpl);
-
+        $vars['_ARTICLE_ID_'] = $article['a_id'];
+        $vars['_ARTICLE_NAME_'] = htmlentities( $article['name'] );
+        $vars['_ARTICLE_TEXT_'] = htmlentities( $article['text']);
+        $vars['_NICK_NAME_'] = htmlentities( $article['nickname'] );
+        $vars['_CREATED_AT_'] = $article['created_at'];
+        $res .= renderTpl( $articleTpl, $vars, TplType::STRING);
     }
 //        $vars['_MAIN_ARTICLES_'] .= articlesPages( Article::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);
     $res .= lotArticlesPages( Paging::getPagesCount($itemsPerPage), $params[ MATCHES ][ 1 ]);

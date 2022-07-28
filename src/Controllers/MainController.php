@@ -25,7 +25,7 @@ class MainController extends BaseController
         $itemsPerPage =ARTICLES_PER_PAGE;
         $articles = Paging::getArticlesOnPage( 0, $itemsPerPage, (int)$params[ MATCHES ][ 1 ]);
         $vars['_MAIN_ARTICLES_'] = getArticlrsPage( $articles, $params);
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function sayHello(array $params = []) : void
@@ -34,7 +34,7 @@ class MainController extends BaseController
         $vars['_USER_'] = $params[ USER ];
         $vars['_MAIN_ARTICLES_'] = 'Привет, ' . htmlentities($params[ MATCHES ][1]??'');
 
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function sayBye(array $params = []) : void
@@ -43,7 +43,7 @@ class MainController extends BaseController
         $vars['_USER_'] = $params[ USER ];
         $vars['_MAIN_ARTICLES_'] = 'Пока... Пока..., ' . htmlentities($params[ MATCHES ][1]??'');
 
-        echo renderVars( ROOT_DIR . 'templates/main/main.php', $vars);
+        echo renderTpl( ROOT_DIR . 'templates/main/main.php', $vars);
     }
 
     public function test(array $params = []) : void
@@ -52,7 +52,7 @@ class MainController extends BaseController
         $vars['subject'] = 'Subject';
         $vars['name'] = 'Name';
         $vars['adress'] = 'Adress';
-        //       echo renderVars( ROOT_DIR . 'templates/test/test.html', $vars);
+        //       echo renderTpl( ROOT_DIR . 'templates/test/test.html', $vars);
         if ( count($vars) ) {
             extract($vars, EXTR_OVERWRITE);
         }

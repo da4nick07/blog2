@@ -22,7 +22,6 @@ class Article extends ActiveRecordEntity
     public static array $insertAr = array( 'author_id'=>PDO::PARAM_INT,
         'name'=>PDO::PARAM_STR,
         'text'=>PDO::PARAM_STR);
-    //                               'created_at'=>'');
 
     public static array $refreshAr = array( '$created_at'=>'');
 
@@ -72,6 +71,11 @@ class Article extends ActiveRecordEntity
     public function getAuthorId(): int
     {
         return $this->author_id;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->created_at;
     }
 
 

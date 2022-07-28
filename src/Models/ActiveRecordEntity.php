@@ -3,11 +3,11 @@ namespace Models;
 
 use Services\Db;
 use PDO;
-use Services\MRedis;
 
 abstract class ActiveRecordEntity
 {
 //  ВНИМАНИЕ! У наследников необходимо задать static string $tableName
+    protected static string $tableName = 'none';
     protected ?int $id;
 
     public static array  $insertAr = [];

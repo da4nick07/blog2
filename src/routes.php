@@ -8,7 +8,7 @@ return [
     '~^/articles/(\d+)/edit$~' => [Controllers\ArticlesController::class, 'edit'],
     '~^/articles/add$~' => [Controllers\ArticlesController::class, 'add'],
     '~^/articles/(\d+)/delete$~' => [Controllers\ArticlesController::class, 'delete'],
-    '~^/users/register$~' => [Controllers\UsersController::class, 'signUp'],
+    '~^/users/register$~' => [Controllers\UsersController::class, 'register'],
     '~^/users/login$~' => [Controllers\UsersController::class, 'login'],
     '~^/users/logOut~' => [Controllers\UsersController::class, 'logOut'],
     '~^/test~' => [Controllers\MainController::class, 'test'],
