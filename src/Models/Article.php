@@ -30,6 +30,7 @@ class Article extends ActiveRecordEntity
     protected User $author;
     protected string $name;
     protected string $text;
+    // в БД - timestamp
     protected string  $created_at;
 
     public function __construct()
