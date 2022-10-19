@@ -1,4 +1,11 @@
 <?php
+
+use Exceptions\DbException;
+use Exceptions\MRedisExeption;
+use Exceptions\NotFoundException;
+use Exceptions\UnauthorizedException;
+use Exceptions\Forbidden;
+
 $startTime = microtime(true);
 
 require '../lib/checkUrl.php';
@@ -9,13 +16,11 @@ if ( is_bool( $route )) {
     return;
 }
 
+// директория проекта
+define('ROOT_DIR', dirname( __FILE__, 2) . '/');
+
 // начальные установки + загрузчик классов
 require_once '../boot/init_html.php';
-use Exceptions\DbException;
-use Exceptions\MRedisExeption;
-use Exceptions\NotFoundException;
-use Exceptions\UnauthorizedException;
-use Exceptions\Forbidden;
 
 try {
     $params[ USER] = getUserByToken();

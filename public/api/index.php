@@ -1,18 +1,22 @@
 <?php
 
+use Exceptions\DbException;
+use Exceptions\MRedisExeption;
+use Exceptions\NotFoundException;
+use Exceptions\UnauthorizedException;
+use Exceptions\Forbidden;
+
 require '../../lib/checkUrl.php';
-require_once '../../boot/init_api.php';
 
 if ( is_bool( $route = getServerPath())) {
     displayJson(['error' => 'Запрошен некорректный url'], 500);
     return;
 }
 
-use Exceptions\DbException;
-use Exceptions\MRedisExeption;
-use Exceptions\NotFoundException;
-use Exceptions\UnauthorizedException;
-use Exceptions\Forbidden;
+// директория проекта
+define('ROOT_DIR', dirname( __FILE__, 3) . '/');
+
+require_once '../../boot/init_api.php';
 
 try {
     $params[ USER] = getUserByToken();
