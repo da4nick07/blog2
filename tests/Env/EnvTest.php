@@ -6,6 +6,10 @@ use PHPUnit\Framework\TestCase;
 
 class EnvTest extends TestCase
 {
+    /**
+     * @return void
+     * @coversNothing
+     */
     public function testEnv()
     {
 //        echo PHP_EOL . \ROOT_DIR . PHP_EOL;

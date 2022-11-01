@@ -1,0 +1,4 @@
+
+Запуск
+
+    ./vendor/bin/phpunit -c tests/Classes/conf.xml tests/Classes

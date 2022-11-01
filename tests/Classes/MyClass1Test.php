@@ -23,6 +23,8 @@ class MyClass1Test extends TestCase {
     }
 
     /**
+     * @return void
+     * @covers MyClass1::multiply
      * @dataProvider providerMultiply
      */
     public function testMultiply($a, $b, $c)
@@ -41,6 +43,10 @@ class MyClass1Test extends TestCase {
         ];
     }
 
+    /**
+     * @return void
+     * @covers MyClass1::multiply
+     */
     // аннотации про исключения устарели
     public function testHasExeption1 ()
     {
