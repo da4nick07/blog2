@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Exceptions\InvalidArgumentException;
 
 // автозагрузку делает окружение...
-//require_once './src/Classes/MyClass1.php';
+require_once ROOT_DIR . 'src/Classes/MyClass1.php';
 
 class MyClass1Test extends TestCase {
     protected $myClass1;
