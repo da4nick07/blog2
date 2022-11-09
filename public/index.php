@@ -20,7 +20,8 @@ if ( is_bool( $route )) {
 define('ROOT_DIR', dirname( __FILE__, 2) . '/');
 
 // начальные установки + загрузчик классов
-require_once '../boot/init_html.php';
+require_once ROOT_DIR .  'boot/init_html.php';
+require_once ROOT_DIR .  'boot/loader.php';
 
 try {
     $params[ USER] = getUserByToken();

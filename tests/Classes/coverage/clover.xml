@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1667997934">
+  <project timestamp="1667997934">
+    <file name="/home/victor/php/php_zone_prof/blog2/tests/Classes/MyClass1Test.php">
+      <class name="Classes\MyClass1Test" namespace="global">
+        <metrics complexity="5" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="11" coveredelements="0"/>
+      </class>
+      <line num="10" type="method" name="setUp" visibility="protected" complexity="1" crap="2" count="0"/>
+      <line num="12" type="stmt" count="0"/>
+      <line num="15" type="method" name="tearDown" visibility="protected" complexity="1" crap="2" count="0"/>
+      <line num="17" type="stmt" count="0"/>
+      <line num="25" type="method" name="testMultiply" visibility="public" complexity="1" crap="2" count="0"/>
+      <line num="29" type="stmt" count="0"/>
+      <line num="32" type="method" name="providerMultiply" visibility="public" complexity="1" crap="2" count="0"/>
+      <line num="35" type="stmt" count="0"/>
+      <line num="46" type="method" name="testHasExeption1" visibility="public" complexity="1" crap="2" count="0"/>
+      <line num="48" type="stmt" count="0"/>
+      <line num="50" type="stmt" count="0"/>
+      <metrics loc="65" ncloc="40" classes="1" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="11" coveredelements="0"/>
+    </file>
+    <metrics files="1" loc="65" ncloc="40" classes="1" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="11" coveredelements="0"/>
+  </project>
+</coverage>

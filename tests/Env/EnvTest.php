@@ -12,7 +12,7 @@ class EnvTest extends TestCase
      */
     public function testEnv()
     {
-//        echo PHP_EOL . \ROOT_DIR . PHP_EOL;
+//        echo PHP_EOL . ROOT_DIR . PHP_EOL;
         // ROOT_DIR определяется в tests/loadHTML_ENV
         // т.е. проверяем, что отработал загрузчик окружения
         $this->assertTrue( defined( 'ROOT_DIR'));

@@ -16,7 +16,8 @@ if ( is_bool( $route = getServerPath())) {
 // директория проекта
 define('ROOT_DIR', dirname( __FILE__, 3) . '/');
 
-require_once '../../boot/init_api.php';
+require_once ROOT_DIR .  'boot/init_api.php';
+require_once ROOT_DIR .  'boot/loader.php';
 
 try {
     $params[ USER] = getUserByToken();

@@ -3,12 +3,10 @@
 namespace Classes;
 
 use PHPUnit\Framework\TestCase;
-//use Classes\MyClass1;
-use Exceptions\InvalidArgumentException;
 
-// автозагрузку делает окружение...
-require_once ROOT_DIR . 'src/Classes/MyClass1.php';
-
+/**
+ * @covers \Classes\MyClass1
+ */
 class MyClass1Test extends TestCase {
     protected $myClass1;
 
@@ -24,7 +22,7 @@ class MyClass1Test extends TestCase {
 
     /**
      * @return void
-     * @covers MyClass1::multiply
+     * @covers \Classes\MyClass1::multiply
      * @dataProvider providerMultiply
      */
     public function testMultiply($a, $b, $c)
@@ -45,7 +43,7 @@ class MyClass1Test extends TestCase {
 
     /**
      * @return void
-     * @covers MyClass1::multiply
+     * @covers \Classes\MyClass1::multiply
      */
     // аннотации про исключения устарели
     public function testHasExeption1 ()
@@ -66,4 +64,5 @@ class MyClass1Test extends TestCase {
         $this->fail ('Not raise an exception InvalidArgumentException');
     }
 */
+
 }

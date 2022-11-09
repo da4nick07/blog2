@@ -21,7 +21,7 @@
     <coverage cacheDirectory=".phpunit.cache/code-coverage"
               processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">./src/Classes</directory>
+            <directory suffix=".php">./src/Controllers</directory>
         </include>
         <report>
             <clover outputFile="./coverage/clover.xml"/>

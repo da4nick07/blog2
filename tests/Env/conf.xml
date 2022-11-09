@@ -14,14 +14,17 @@
          verbose="true">
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory>./</directory>
         </testsuite>
     </testsuites>
 
     <coverage cacheDirectory=".phpunit.cache/code-coverage"
               processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">./src/Env</directory>
         </include>
-    </coverage>
+        <report>
+            <clover outputFile="./coverage/clover.xml"/>
+            <php outputFile="./coverage/coverage.php"/>
+        </report>    </coverage>
 </phpunit>
